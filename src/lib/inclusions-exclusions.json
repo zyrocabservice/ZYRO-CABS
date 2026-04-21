@@ -1,0 +1,15 @@
+
+{
+  "inclusions": [
+    "Driver & Fuel Charges",
+    "AC in the vehicle",
+    "Toll and state taxes (for one-way)"
+  ],
+  "exclusions": [
+    "Parking charges",
+    "Waiting charges (if applicable)",
+    "Additional sightseeing charges"
+  ]
+}
+
+    

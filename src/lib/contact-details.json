@@ -1,0 +1,12 @@
+
+{
+  "phone": "+919999999999",
+  "email": "zyrocabservice@gmail.com",
+  "whatsapp": "+6590593870",
+  "instagram": "zyrocabsindia",
+  "whatsappMessage": "👋Hi ZyroCabs Admin, I'd like to book a ride with ZyroCabs.\n%0AHere are my details:\n%0A*📍From:* {from}\n%0A*📍To:* {to}\n%0A*🚕Car:* {carType}\n%0A*🧑🏻‍🤝‍🧑🏻Passengers:* {passengers}\n%0A*🆎Name:* {name}\n%0A*📞Phone:* {phone}\n%0A*📩Email:* {email}\n%0A*📅Days:* {numberOfDays}",
+  "enquiryWhatsappMessage": "Hi ZyroCabs Admin 👋, I'd like to make an enquiry about a {carType} for a {tripType}, 🙏Thank You!%0A",
+  "emailSubject": "Enquiry: Booking for {carType} - {tripType}",
+  "emailBody": "👋Hello ZyroCabs Admin,\n\nI would like to make an enquiry about booking a {carType} for a {tripType}.\n\nPlease provide me with more details.\n\n🙏Thank you,",
+  "tripPlanEmailBody": "Hello ZyroCabs Admin,\n\nI'd like to plan a trip with the following details:\n\n- From: {from}\n- To: {to}\n- Car Type: {carType}\n- Passengers: {passengers}\n- Name: {name}\n- Phone: {phone}\n- Email: {email}\n- Number of Days: {numberOfDays}\n\nThank you!"
+}

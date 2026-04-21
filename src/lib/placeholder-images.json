@@ -1,0 +1,67 @@
+{
+  "galleryImages": [
+    {
+      "id": "gallery-1",
+      "description": "Zyro cabs service",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design%20(1).jpg",
+      "imageHint": "taxi service",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-2",
+      "description": "Zyro cabs on road",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design%20(1).png",
+      "imageHint": "car road",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Zyro cabs waiting",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design%20(2).png",
+      "imageHint": "car waiting",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-4",
+      "description": "Zyro cabs night service",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design%20(3).png",
+      "imageHint": "night taxi",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-5",
+      "description": "Zyro cabs on highway",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design%20(4).png",
+      "imageHint": "highway car",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-6",
+      "description": "Zyro cabs in city",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design%20(5).png",
+      "imageHint": "city taxi",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-7",
+      "description": "Zyro cabs booking",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design%20(6).png",
+      "imageHint": "app booking",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-8",
+      "description": "Zyro cabs logo",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design.jpg",
+      "imageHint": "company logo",
+      "objectFit": "cover"
+    },
+    {
+      "id": "gallery-9",
+      "description": "Zyro cabs travel",
+      "imageUrl": "https://raw.githubusercontent.com/thethanjaiculture-dev/GetIn-Assests/main/Untitled%20design.png",
+      "imageHint": "travel car",
+      "objectFit": "cover"
+    }
+  ]
+}

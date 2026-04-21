@@ -1,0 +1,96 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return request.auth != null && get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role == 'Admin';
+    }
+    
+    function isSubAdmin() {
+        return request.auth != null && get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role == 'Sub-Admin';
+    }
+
+    // Collection: bookings
+    match /bookings/{bookingId} {
+      allow read: if isOwner(resource.data.customer.uid) || isAdmin() || isSubAdmin();
+      allow create: if request.auth != null; // Allow any authenticated user to create a booking
+      allow update: if isAdmin() || isSubAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /bookings/{bookingId} {
+        allow list: if isAdmin() || isSubAdmin();
+    }
+    
+    // This rule allows a user to query for their own bookings.
+    // It's essential for the "My Bookings" page for non-admin users.
+    match /bookings/{bookingId} {
+        allow list: if request.auth.uid == request.query.where.customer.uid;
+    }
+
+
+    // Collection: roles
+    match /roles/{userId} {
+      // A user can read their own role document.
+      allow get: if request.auth.uid == userId;
+      // Admins can read and write any role document.
+      allow read, write: if isAdmin();
+    }
+    
+    // Other collections (adjust as needed)
+    match /cars/{carId} {
+      allow read: if true;
+      allow write: if isAdmin() || isSubAdmin();
+    }
+    
+    match /config/{docId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+
+    match /banners/{bannerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /offers/{offerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /customers/{customerId} {
+        allow read, write: if isAdmin() || isSubAdmin();
+    }
+    
+    match /reports/{reportId} {
+        allow create: if true; // Anyone can submit a report
+        allow read, write, delete: if isAdmin() || isSubAdmin();
+    }
+    
+    match /feedbacks/{feedbackId} {
+        allow create: if true; // Anyone can submit feedback
+        allow read, write, delete: if isAdmin() || isSubAdmin();
+    }
+
+    match /tripPlans/{planId} {
+        allow create: if true; // Anyone can create a trip plan
+        allow read, write, delete: if isAdmin() || isSubAdmin();
+    }
+    
+    match /tollData/{tollId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+    
+    match /webLogins/{loginId} {
+        allow create: if true;
+        allow read, delete: if isAdmin() || isSubAdmin();
+    }
+  }
+}
