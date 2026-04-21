@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Image from "next/image";
 import LottieAnimation from "@/components/home/lottie-animation";
-import { saveReportToSheet } from "@/lib/actions";
+import { saveReportToSupabase } from "@/lib/actions";
 import CountryCodeSelector from "@/components/ui/country-code-selector";
 import { countries } from "@/lib/countries";
 import { useToast } from "@/hooks/use-toast";
@@ -132,7 +132,7 @@ export default function ReportPage() {
         const data = Object.fromEntries(formData.entries());
         data.mobile = `${countryCode}${mobileNumber}`;
         
-        const result = await saveReportToSheet(data as any);
+        const result = await saveReportToSupabase(data as any);
         setIsSubmitting(false);
 
         if (result.success) {

@@ -1,13 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MapPin, History, Mic, X } from 'lucide-react';
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import { ArrowLeft, MapPin, History, X, Loader2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useDebounce } from '@/hooks/use-debounce';
 
 const RECENT_SEARCHES_KEY = "zyro_recent_searches_v2";
 
@@ -21,28 +19,38 @@ export default function LocationSearchContent({}: LocationSearchContentProps) {
     const toValue = searchParams.get('currentTo') || '';
 
     const [inputValue, setInputValue] = useState('');
-    const debouncedInputValue = useDebounce(inputValue, 300);
+    const [suggestions, setSuggestions] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
-    
-    const {
-        ready,
-        suggestions: { status, data },
-        setValue,
-        clearSuggestions,
-    } = usePlacesAutocomplete({
-        requestOptions: {
-            componentRestrictions: { country: "in" },
-        },
-        debounce: 0, // Debouncing is handled manually
-    });
+    const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => {
-        if (debouncedInputValue) {
-            setValue(debouncedInputValue);
-        } else {
-            clearSuggestions();
+    const fetchSuggestions = useCallback(async (query: string) => {
+        if (!query || query.length < 3) {
+            setSuggestions([]);
+            return;
         }
-    }, [debouncedInputValue, setValue, clearSuggestions]);
+
+        setLoading(true);
+        try {
+            const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&lang=en`);
+            const data = await response.json();
+            setSuggestions(data.features || []);
+        } catch (error) {
+            console.error("Error fetching suggestions from Photon:", error);
+            setSuggestions([]);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const handleInput = (val: string) => {
+        setInputValue(val);
+
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        debounceTimer.current = setTimeout(() => {
+            fetchSuggestions(val);
+        }, 300);
+    };
 
     useEffect(() => {
         const searches = localStorage.getItem(RECENT_SEARCHES_KEY);
@@ -85,9 +93,8 @@ export default function LocationSearchContent({}: LocationSearchContentProps) {
     
     const handleClearInput = () => {
         setInputValue('');
-        clearSuggestions();
+        setSuggestions([]);
     }
-
 
     return (
         <div className="h-screen w-screen bg-background flex flex-col">
@@ -100,10 +107,14 @@ export default function LocationSearchContent({}: LocationSearchContentProps) {
                         autoFocus
                         placeholder={field === 'from' ? "Enter pickup location" : "Enter destination"}
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
+                        onChange={(e) => handleInput(e.target.value)}
                         className="pr-10"
-                        disabled={!ready}
                     />
+                    {loading && (
+                        <div className="absolute right-10 top-1/2 -translate-y-1/2">
+                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        </div>
+                    )}
                     {inputValue && (
                         <Button
                             variant="ghost"
@@ -118,22 +129,29 @@ export default function LocationSearchContent({}: LocationSearchContentProps) {
             </header>
             <ScrollArea className="flex-1">
                 <div className="p-4">
-                     {status === 'OK' && data.length > 0 && (
+                     {suggestions.length > 0 && (
                         <ul className="space-y-2">
-                           {data.map(suggestion => (
-                                <li key={suggestion.place_id}>
-                                    <button
-                                        onClick={() => handleSelect(suggestion.description)}
-                                        className="w-full text-left flex items-start gap-4 p-3 rounded-md hover:bg-muted"
-                                    >
-                                        <MapPin className="h-5 w-5 mt-1 text-primary flex-shrink-0" />
-                                        <div>
-                                            <p className="font-medium text-sm">{suggestion.structured_formatting.main_text}</p>
-                                            <p className="text-xs text-muted-foreground">{suggestion.structured_formatting.secondary_text}</p>
-                                        </div>
-                                    </button>
-                                </li>
-                           ))}
+                           {suggestions.map((suggestion, index) => {
+                                const props = suggestion.properties;
+                                const name = props.name;
+                                const secondary = [props.city, props.state, props.country].filter(Boolean).join(', ');
+                                const fullAddress = [name, secondary].filter(Boolean).join(', ');
+                                
+                                return (
+                                    <li key={`${props.osm_id}-${index}`}>
+                                        <button
+                                            onClick={() => handleSelect(fullAddress)}
+                                            className="w-full text-left flex items-start gap-4 p-3 rounded-md hover:bg-muted"
+                                        >
+                                            <MapPin className="h-5 w-5 mt-1 text-primary flex-shrink-0" />
+                                            <div>
+                                                <p className="font-medium text-sm">{name}</p>
+                                                <p className="text-xs text-muted-foreground">{secondary}</p>
+                                            </div>
+                                        </button>
+                                    </li>
+                                );
+                           })}
                         </ul>
                      )}
                      {inputValue.length === 0 && recentSearches.length > 0 && (
@@ -150,8 +168,13 @@ export default function LocationSearchContent({}: LocationSearchContentProps) {
                                             <p className="text-sm">{search}</p>
                                         </button>
                                     </li>
-                               ))}
+                                ))}
                             </ul>
+                        </div>
+                     )}
+                     {inputValue.length > 0 && !loading && suggestions.length === 0 && (
+                        <div className="p-8 text-center text-muted-foreground">
+                            No locations found for &quot;{inputValue}&quot;
                         </div>
                      )}
                 </div>

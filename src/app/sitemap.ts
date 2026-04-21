@@ -1,6 +1,6 @@
 
 import { MetadataRoute } from 'next';
-import { getBannersFromFirestore, getAllCars } from '@/lib/actions';
+import { getBannersFromSupabase, getAllCars } from '@/lib/actions';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://zyrocabs.com';
@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch dynamic image data to include in the sitemap
   const carResult = await getAllCars();
-  const bannerResult = await getBannersFromFirestore();
+  const bannerResult = await getBannersFromSupabase();
 
   // Find the homepage entry to add images to it
   const homepageEntry = pages.find(p => p.url === baseUrl + '/');

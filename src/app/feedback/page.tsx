@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, Loader2, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { saveFeedbackToSheet } from '@/lib/actions';
+import { saveFeedbackToSupabase } from '@/lib/actions';
 import { cn } from '@/lib/utils';
 
 export default function FeedbackPage() {
@@ -45,7 +45,7 @@ export default function FeedbackPage() {
             return;
         }
         
-        const result = await saveFeedbackToSheet({
+        const result = await saveFeedbackToSupabase({
             name: data.name as string,
             email: data.email as string,
             feedback: data.feedback as string,

@@ -8,7 +8,7 @@ import type { Car, TaxesAndCharges, TollPlaza, InclusionsExclusions, Offer } fro
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { getCalculatedCarOptions, getTaxesAndCharges, getInclusionsExclusions, getOffersFromFirestore } from '@/lib/actions';
+import { getCalculatedCarOptions, getTaxesAndCharges, getInclusionsExclusions, getOffersFromSupabase } from '@/lib/actions';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, ArrowRightLeft, ArrowRight, Route, Clock, X } from 'lucide-react';
@@ -133,7 +133,7 @@ export default function BookPageContent() {
           getCalculatedCarOptions(leavingFrom, goingTo, rideType),
           getTaxesAndCharges(),
           getInclusionsExclusions(),
-          getOffersFromFirestore(),
+          getOffersFromSupabase(),
       ]);
 
       setTaxesAndCharges(taxes);

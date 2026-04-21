@@ -1,7 +1,7 @@
 
 'use client';
 
-import { getAdminDashboardData, saveCarData, updateBookingDetailsInSheet, saveContactDetails, saveGoogleSheetId, savePlaceholderImages, saveFeedbacksToSheet, saveTaxesAndCharges, saveInclusionsExclusions, saveButtonSettings, uploadTollDataToFirestore, getTollsFromFirestore, archiveOldDataToSheet, getUserRoles, saveUserRoles, deleteAllDataByCategory, getUserByEmail, saveOffersToFirestore } from '@/lib/actions';
+import { getAdminDashboardData, saveCarData, updateBookingDetailsInSupabase, saveContactDetails, saveGoogleSheetId, savePlaceholderImages, saveFeedbacksToSupabase, saveTaxesAndCharges, saveInclusionsExclusions, saveButtonSettings, uploadTollDataToSupabase, getTollsFromSupabase, archiveOldDataToSheet, getUserRoles, saveUserRoles, deleteAllDataByCategory, getUserByEmail, saveOffersToSupabase } from '@/lib/actions';
 import { Suspense, useState, useEffect, useMemo, useTransition, useCallback } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Car, Booking, WebLogin, CustomerDetail, RedirectLinking, Location, ContactDetails, UserReport, UserFeedback, ImagePlaceholder, TripPlan, TaxesAndCharges, InclusionsExclusions, ButtonSettings, TollPlaza, UserRole, Offer, Driver } from '@/lib/types';
@@ -384,7 +384,7 @@ export default function AdminDashboard() {
         .filter(Boolean);
 
       if (updates.length > 0) {
-          savePromises.push(updateBookingDetailsInSheet(updates as any).then(result => {
+          savePromises.push(updateBookingDetailsInSupabase(updates as any).then(result => {
               if (result.success) {
                   setOriginalBookings(JSON.parse(JSON.stringify(bookings)));
               }
@@ -412,7 +412,7 @@ export default function AdminDashboard() {
     }
 
     if (offerChanges) {
-        savePromises.push(saveOffersToFirestore(offers).then(result => {
+        savePromises.push(saveOffersToSupabase(offers).then(result => {
             if (result.success) {
                 setOriginalOffers(JSON.parse(JSON.stringify(offers)));
             }
@@ -421,7 +421,7 @@ export default function AdminDashboard() {
     }
 
     if (feedbackChanges) {
-        savePromises.push(saveFeedbacksToSheet(userFeedbacks).then(result => {
+        savePromises.push(saveFeedbacksToSupabase(userFeedbacks).then(result => {
             if (result.success) {
                 setOriginalUserFeedbacks(JSON.parse(JSON.stringify(userFeedbacks)));
             }

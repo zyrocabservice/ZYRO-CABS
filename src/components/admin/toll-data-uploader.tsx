@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Loader2, UploadCloud, Trash2 } from 'lucide-react';
-import { uploadTollDataToFirestore, clearTollData } from '@/lib/actions';
+import { uploadTollDataToSupabase, clearTollData } from '@/lib/actions';
 import type { TollPlaza } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
@@ -77,7 +77,7 @@ export default function TollDataUploader({ currentTollCount, onUploadSuccess }: 
         }
 
         startUploading(async () => {
-            const result = await uploadTollDataToFirestore(fileContent);
+            const result = await uploadTollDataToSupabase(fileContent);
 
             if (result.success && result.count !== undefined) {
                 onUploadSuccess(result.count);

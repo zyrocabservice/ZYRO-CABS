@@ -1246,6 +1246,51 @@ export async function deleteAllDataByCategory(category: string, selectedIds?: st
 
 // deleteSelectedItems logic merged into deleteAllDataByCategory
 
+export async function getUserById(uid: string): Promise<{ success: boolean; user?: { uid: string; email: string; displayName: string }; error?: string }> {
+    const supabase = await createClient();
+    try {
+        const { data: { user }, error } = await supabase.auth.admin.getUserById(uid);
+        if (error || !user) throw error || new Error("User not found");
+        
+        return { 
+            success: true, 
+            user: { 
+                uid: user.id, 
+                email: user.email || '', 
+                displayName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'
+            } 
+        };
+    } catch (error: any) {
+        console.error("Error fetching user by ID from Supabase:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function getUserByEmail(email: string): Promise<{ success: boolean; user?: { uid: string; email: string; displayName: string }; error?: string }> {
+    const supabase = await createClient();
+    try {
+        // listUsers is more reliable for admin search
+        const { data: { users }, error } = await supabase.auth.admin.listUsers();
+        if (error) throw error;
+        
+        const user = users.find(u => u.email === email);
+        if (!user) return { success: false, error: "User not found" };
+        
+        return { 
+            success: true, 
+            user: { 
+                uid: user.id, 
+                email: user.email || '', 
+                displayName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'
+            } 
+        };
+    } catch (error: any) {
+        console.error("Error fetching user by email from Supabase:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+
 
 
 
